@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "${modid}",
+    "name": "Chime",
+    "description": "Waze",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["QuiteBoring"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
