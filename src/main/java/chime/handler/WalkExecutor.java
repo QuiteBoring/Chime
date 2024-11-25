@@ -209,8 +209,8 @@ public class WalkExecutor {
                 }
             } else {
                 TravelVector vector = (TravelVector) elm;
-                double distance1 = distanceTo(playerPos, vector.from.getBlockPos());
-                double distance2 = distanceTo(playerPos, vector.to.getBlockPos());
+                double distance1 = distanceTo(playerPos, vector.getFrom().getBlockPos());
+                double distance2 = distanceTo(playerPos, vector.getTo().getBlockPos());
                 
                 if (distanceAway > distance1 && distance1 > 1) {
                     closest = elm;
@@ -223,7 +223,7 @@ public class WalkExecutor {
         }
 
         while (!path.isEmpty()) {
-            if (path.equals(closest)) return;
+            if (path.equals(closest)) break;
             path.remove(0);
         }
         
