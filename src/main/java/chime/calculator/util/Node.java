@@ -1,14 +1,10 @@
 package chime.calculator.util;
 
-import chime.Chime;
 import chime.util.BlockUtil;
-import chime.util.LogUtil;
-import net.minecraft.block.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
-import net.minecraft.util.Vec3i;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class Node {
@@ -64,13 +60,14 @@ public class Node {
     public boolean canBeTraversed() {
         if (parent == null) return false;
 
+        if (!canMoveDiagonal()) return false;
         if (!BlockUtil.isSpaceAvailable(blockPos)) return false;
         if (parent.isJumpNode() && BlockUtil.noJump(new BlockPos(x, y - 1, z))) return false;
         if (parent.isJumpNode() && parent.getX() != x && parent.getZ() != z) return false;
         if (BlockUtil.isBlockSolid(blockPos) || BlockUtil.isBlockSolid(new BlockPos(x, y + 1, z))) return false;
         if (parent.isFallNode() && parent.getY() == y) return false;
         if (BlockUtil.isBlockSolid(new BlockPos(x, y - 1, z))) return true;
-        
+
         if (parent.blockPos.getY() == y - 1 && BlockUtil.isBlockSolid(new BlockPos(x, y - 2, z))) {
             setJumpNode(true);
             return true;
@@ -91,6 +88,28 @@ public class Node {
         }
 
         return false;
+    }
+
+    private boolean canMoveDiagonal() {
+        if (parent.getX() == x || parent.getZ() == z) return false;
+
+        List<BlockPos> diagonalPositions = Arrays.asList(
+                new BlockPos(x + 1, y, z + 1),
+                new BlockPos(x + 1, y, z - 1),
+                new BlockPos(x - 1, y, z + 1),
+                new BlockPos(x - 1, y, z - 1)
+        );
+
+        for (BlockPos diagonalPos : diagonalPositions) {
+            BlockPos adjacentX = new BlockPos(diagonalPos.getX(), y, z);
+            BlockPos adjacentZ = new BlockPos(x, y, diagonalPos.getZ());
+
+            if (!BlockUtil.isSpaceAvailable(adjacentX) || !BlockUtil.isSpaceAvailable(adjacentZ)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void calculateHeuristic(Node endNode) {
