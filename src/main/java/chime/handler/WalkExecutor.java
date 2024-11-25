@@ -82,11 +82,12 @@ public class WalkExecutor {
             return;
         }
 
-        if (currentTarget == null) currentTarget = getCurrentTarget(getClosest());
+        if (currentTarget == null) currentTarget = getCurrentTarget(path.get(0));
         WalkTarget playerOnTarget;
         if (!((playerOnTarget = onTarget()) == null)) currentTarget = playerOnTarget;
 
         while (tick(currentTarget)) {
+            if (!path.isEmpty()) path.remove(0);
             if (path.isEmpty()) {
                 currentTarget = null;
                 KeyBindUtil.setMovement(false, false, false, false);
@@ -107,9 +108,8 @@ public class WalkExecutor {
 
                 return;
             }
-
-            path.remove(0);
-            currentTarget = getCurrentTarget(getClosest());
+            
+            currentTarget = getCurrentTarget(path.get(0));
         }
 
         KeyBinding.setKeyBindState(Chime.MC.gameSettings.keyBindSprint.getKeyCode(), true);
@@ -163,7 +163,7 @@ public class WalkExecutor {
                 }
 
                 KeyBinding.setKeyBindState(Chime.MC.gameSettings.keyBindJump.getKeyCode(), false);
-                return getCurrentTarget(getClosest());
+                return getCurrentTarget(path.get(0));
             }
         }
 
@@ -194,10 +194,6 @@ public class WalkExecutor {
         return null;
     }
 
-    public PathElm getClosest() {
-        return path.get(0);
-    }
-    
     public boolean isActive() {
         return isActive;
     }
