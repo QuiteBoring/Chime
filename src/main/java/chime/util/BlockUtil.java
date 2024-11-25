@@ -38,6 +38,13 @@ public class BlockUtil {
         return pos;
     }
 
+    public static boolean isFree(BlockPos blockpos, IBlockAccess blockaccess) {
+        IBlockState blockState = blockaccess.getBlockState(blockpos);
+        Block block = blockState.getBlock();
+
+        return !blockHasCollision(blockpos, blockState, block, blockaccess);
+    }
+
     public static boolean isFree(float x, float y, float z, IBlockAccess blockaccess) {
         BlockPos blockpos = new BlockPos(x, y, z);
         IBlockState blockState = blockaccess.getBlockState(blockpos);
