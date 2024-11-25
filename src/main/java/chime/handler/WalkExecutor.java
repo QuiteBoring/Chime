@@ -108,6 +108,7 @@ public class WalkExecutor {
                 return;
             }
 
+            path.remove(0);
             currentTarget = getCurrentTarget(getClosest());
         }
 
@@ -194,68 +195,7 @@ public class WalkExecutor {
     }
 
     public PathElm getClosest() {
-        BlockPos playerPos = BlockUtil.getPlayerBlockPos();
-        PathElm closest = null;
-        double distanceAway = 10000;
-    
-        // Iterate through the path elements to find the closest point
-        for (int i = 0; i < path.size(); i++) {
-            PathElm elm = path.get(i);
-            boolean isStandingOnNode = path.get(i).playerOn(Chime.MC.thePlayer.getPositionVector());
-    
-            if (elm instanceof Node) {
-                Node node = (Node) elm;
-                double distance = distanceTo(playerPos, node.getBlockPos());}
-    
-                // Update closest if a better (closer) node is found
-                if (!isStandingOnNode && distance < distanceAway && distance > 1) {
-                    closest = elm;
-                    distanceAway = distance;
-                }
-    
-            } else if (elm instanceof TravelVector) {
-                TravelVector vector = (TravelVector) elm;
-                double distance1 = distanceTo(playerPos, vector.getFrom().getBlockPos());
-                double distance2 = distanceTo(playerPos, vector.getTo().getBlockPos());
-    
-                // Check if either point in the vector is closer than the previous closest
-                if (!isStandingOnNode) {
-                    if (distance1 < distanceAway && distance1 > 1) {
-                        closest = elm;
-                        distanceAway = distance1;
-                    } else if (distance2 < distanceAway && distance2 > 1) {
-                        closest = elm;
-                        distanceAway = distance2;
-                    }
-                }
-            }
-    
-            // If we found the closest element but it's not the current one, skip to the next node
-            if (isStandingOnNode && i < path.size() - 1) {
-                // Return the next node if we're standing on the current one
-                closest = path.get(i + 1);
-            }
-        }
-    
-        // If the path is not empty, remove nodes before the closest one
-        if (closest != null && !path.isEmpty()) {
-            // Keep removing the elements until we reach the closest one
-            while (!path.isEmpty()) {
-                if (path.get(0).equals(closest)) {
-                    break; // Stop when the closest element is found
-                }
-                path.remove(0); // Remove the element
-            }
-        }
-    
-        return closest;
-    }
-    
-    private double distanceTo(BlockPos start, BlockPos end) {
-        double d1 = (double) end.getX() - start.getX();
-        double d2 = (double) end.getY() - start.getY();
-        double d3 = (double) end.getZ() - start.getZ();
-        return Math.sqrt((d1 * d1) + (d2 * d2) + (d3 * d3));
+        return path.get(0);
     }
     
     public boolean isActive() {
