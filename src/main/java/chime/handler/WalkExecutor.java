@@ -196,7 +196,7 @@ public class WalkExecutor {
     public PathElm getClosest() {
         BlockPos playerPos = BlockUtil.getPlayerBlockPos();
         PathElm closest = null;
-        double distanceAway;
+        double distanceAway = 10000;
         
         for (PathElm elm : path) {
             if (elm instanceof Node) {
