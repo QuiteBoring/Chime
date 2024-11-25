@@ -81,15 +81,11 @@ public class WalkExecutor {
             return;
         }
 
-        if (currentTarget == null) currentTarget = getCurrentTarget(path.get(0));
+        if (currentTarget == null) currentTarget = getCurrentTarget(getClosest());
         WalkTarget playerOnTarget;
         if (!((playerOnTarget = onTarget()) == null)) currentTarget = playerOnTarget;
 
         while (tick(currentTarget)) {
-            try {
-                path.remove(0);
-            } catch (Exception ignored) {}
-
             if (path.isEmpty()) {
                 currentTarget = null;
                 KeyBindUtil.setMovement(false, false, false, false);
@@ -111,7 +107,7 @@ public class WalkExecutor {
                 return;
             }
 
-            currentTarget = getCurrentTarget(path.get(0));
+            currentTarget = getCurrentTarget(getClosest());
         }
 
         KeyBinding.setKeyBindState(Chime.MC.gameSettings.keyBindSprint.getKeyCode(), true);
@@ -127,6 +123,8 @@ public class WalkExecutor {
         pressKeys(angles.yaw);
     }
 
+
+    
     private void pressKeys(double targetYaw) {
         double difference = targetYaw - Chime.MC.thePlayer.rotationYaw;
 
@@ -163,7 +161,7 @@ public class WalkExecutor {
                 }
 
                 KeyBinding.setKeyBindState(Chime.MC.gameSettings.keyBindJump.getKeyCode(), false);
-                return getCurrentTarget(path.get(0));
+                return getCurrentTarget(getClosest());
             }
         }
 
@@ -194,6 +192,51 @@ public class WalkExecutor {
         return null;
     }
 
+    public PathElm getClosest() {
+        BlockPos playerPos = BlockUtil.getPlayerBlockPos();
+        PathElm closest = null;
+        double distanceAway;
+        
+        for (PathElm elm : path) {
+            if (elm instanceof Node) {
+                Node node = (Node) elm;
+                double distance = distanceTo(playerPos, node.getBlockPos());
+
+                if (distanceAway > distance && distance > 1) {
+                    closest = elm;
+                    distanceAway = distance1;
+                }
+            } else {
+                TravelVector vector = (TravelVector) elm;
+                double distance1 = distanceTo(playerPos, vector.from.getBlockPos());
+                double distance2 = distanceTo(playerPos, vector.to.getBlockPos());
+                
+                if (distanceAway > distance1 && distance1 > 1) {
+                    closest = elm;
+                    distanceAway = distance1;
+                } else if (distanceAway > distance2 && distance2 > 1) {
+                    closest = elm;
+                    distanceAway = distance2;
+                }
+            }
+        }
+
+        while (!path.isEmpty()) {
+            if (path.equals(closest)) return;
+            path.remove(0);
+        }
+        
+        return closest;
+    }
+
+    private double distanceTo(BlockPos start, BlockPos end) {
+        double d1 = (double) end.getX() - start.getX();
+        double d2 = (double) end.getY() - start.getY();
+        double d3 = (double) end.getZ() - start.getZ();
+
+        return Math.sqrt((d1 * d1) + (d2 * d2) + (d3 * d3));
+    }
+    
     public boolean isActive() {
         return isActive;
     }
