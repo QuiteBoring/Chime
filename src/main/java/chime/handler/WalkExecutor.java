@@ -86,6 +86,8 @@ public class WalkExecutor {
         WalkTarget playerOnTarget;
         if (!((playerOnTarget = onTarget()) == null)) currentTarget = playerOnTarget;
 
+
+
         while (tick(currentTarget)) {
             if (!path.isEmpty()) path.remove(0);
             if (path.isEmpty()) {
