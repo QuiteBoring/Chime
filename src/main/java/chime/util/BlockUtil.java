@@ -139,9 +139,8 @@ public class BlockUtil {
     }
 
     public static boolean isSpaceAvailable(BlockPos blockPos) {
-        if (Chime.MC.theWorld.getBlockState(blockPos.add(0, 1, 0)).getBlock() != Blocks.air) return false;
-        if (Chime.MC.theWorld.getBlockState(blockPos.add(0, 2, 0)).getBlock() != Blocks.air) return false;
-        return true;
+        return isFree(blockPos.add(0, 1, 0), Chime.MC.theWorld) 
+                || isFree(blockPos.add(0, 2, 0), Chime.MC.theWorld);
     }
 
 }
