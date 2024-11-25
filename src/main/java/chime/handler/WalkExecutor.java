@@ -214,7 +214,7 @@ public class WalkExecutor {
                 
                 if (distanceAway > distance1 && distance1 > 1) {
                     closest = elm;
-                    distanceAway = distance1;
+                    distanceAway = distance;
                 } else if (distanceAway > distance2 && distance2 > 1) {
                     closest = elm;
                     distanceAway = distance2;
