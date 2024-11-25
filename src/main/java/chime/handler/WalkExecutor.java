@@ -18,6 +18,7 @@ import chime.target.impl.TravelTarget;
 import chime.target.impl.TravelVectorTarget;
 import chime.util.*;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
