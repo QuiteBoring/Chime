@@ -30,20 +30,20 @@ public class DebugCommand extends CommandBase {
                 block = BlockUtil.getPlayerBlockPos();
                 LogUtil.sendDebug("Saved current position!");
             } else if (args[0].equalsIgnoreCase("walk")) {
-                WalkExecutor.getInstance().walk(new PathConfig(
-                    block,
-                    true,
-                    true,
-                    true,
-                    10000
-                ));
+                new Thread(() -> WalkExecutor.getInstance().walk(new PathConfig.Walk(
+                        block,
+                        true,
+                        true,
+                        true,
+                        10000
+                ))).start();
             } else if (args[0].equalsIgnoreCase("fly")) {
-                FlyExecutor.getInstance().fly(new PathConfig(
-                    block,
-                    true,
-                    true,
-                    10000L
-                ));
+                new Thread(() -> FlyExecutor.getInstance().fly(new PathConfig.Fly(
+                        block,
+                        true,
+                        true,
+                        10000L
+                ))).start();
             }
         }
     }

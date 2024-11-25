@@ -1,11 +1,11 @@
 package chime.calculator.util;
 
+import chime.Chime;
 import chime.util.BlockUtil;
 import net.minecraft.util.BlockPos;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Node {
 
@@ -60,29 +60,34 @@ public class Node {
     public boolean canBeTraversed() {
         if (parent == null) return false;
 
-        if (!canMoveDiagonal()) return false;
-        if (!BlockUtil.isSpaceAvailable(blockPos)) return false;
-        if (parent.isJumpNode() && BlockUtil.noJump(new BlockPos(x, y - 1, z))) return false;
-        if (parent.isJumpNode() && parent.getX() != x && parent.getZ() != z) return false;
-        if (BlockUtil.isBlockSolid(blockPos) || BlockUtil.isBlockSolid(new BlockPos(x, y + 1, z))) return false;
-        if (parent.isFallNode() && parent.getY() == y) return false;
-        if (BlockUtil.isBlockSolid(new BlockPos(x, y - 1, z))) return true;
+        int parentX = parent.getX();
+        int parentZ = parent.getZ();
+        int parentY = parent.getY();
+        boolean isJumpNode = parent.isJumpNode();
+        boolean isFallNode = parent.isFallNode();
+        BlockPos belowBlock = new BlockPos(x, y - 1, z);
+        BlockPos aboveBlock = new BlockPos(x, y + 1, z);
+        BlockPos parentBelow = new BlockPos(parentX, parentY - 1, parentZ);
 
-        if (parent.blockPos.getY() == y - 1 && BlockUtil.isBlockSolid(new BlockPos(x, y - 2, z))) {
+        if (parentX != x && parentZ != z && !canMoveDiagonal()) return false;
+        if (!BlockUtil.isSpaceAvailable(blockPos)) return false;
+        if (isJumpNode && BlockUtil.noJump(belowBlock)) return false;
+        if (isJumpNode && parentX != x && parentZ != z) return false;
+        if (BlockUtil.isBlockSolid(blockPos) || BlockUtil.isBlockSolid(aboveBlock)) return false;
+        if (isFallNode && parentY == y) return false;
+        if (BlockUtil.isBlockSolid(belowBlock)) return true;
+
+        if (parentY == y - 1 && BlockUtil.isBlockSolid(new BlockPos(x, y - 2, z))) {
             setJumpNode(true);
             return true;
         }
 
-        if (parent.isFallNode() && y == parent.getY() - 1) {
+        if (isFallNode && y == parentY - 1) {
             setFallNode(true);
             return true;
         }
 
-        if (parent.blockPos.getY() == y && BlockUtil.isBlockSolid(new BlockPos(
-                parent.blockPos.getX(),
-                parent.blockPos.getY() - 1,
-                parent.blockPos.getZ()
-        ))) {
+        if (parentY == y && BlockUtil.isBlockSolid(parentBelow)) {
             setFallNode(true);
             return true;
         }
@@ -91,33 +96,39 @@ public class Node {
     }
 
     private boolean canMoveDiagonal() {
-        if (parent.getX() == x || parent.getZ() == z) return false;
-
-        List<BlockPos> diagonalPositions = Arrays.asList(
-                new BlockPos(x + 1, y, z + 1),
-                new BlockPos(x + 1, y, z - 1),
-                new BlockPos(x - 1, y, z + 1),
-                new BlockPos(x - 1, y, z - 1)
+        List<BlockPos> adjacent = getSimilar(
+                Arrays.asList(
+                        parent.blockPos.add(1, 0, 0),
+                        parent.blockPos.add(-1, 0, 0),
+                        parent.blockPos.add(0, 0, 1),
+                        parent.blockPos.add(0, 0, -1)
+                ),
+                Arrays.asList(
+                        blockPos.add(1, 0, 0),
+                        blockPos.add(-1, 0, 0),
+                        blockPos.add(0, 0, 1),
+                        blockPos.add(0, 0, -1)
+                )
         );
 
-        for (BlockPos diagonalPos : diagonalPositions) {
-            BlockPos adjacentX = new BlockPos(diagonalPos.getX(), y, z);
-            BlockPos adjacentZ = new BlockPos(x, y, diagonalPos.getZ());
-
-            if (!BlockUtil.isSpaceAvailable(adjacentX) || !BlockUtil.isSpaceAvailable(adjacentZ)) {
-                return false;
-            }
-        }
-
-        return true;
+        return adjacent.size() > 1 &&
+                BlockUtil.isFree(adjacent.get(0), Chime.MC.theWorld) &&
+                BlockUtil.isFree(adjacent.get(1), Chime.MC.theWorld);
     }
 
     private void calculateHeuristic(Node endNode) {
-        double d1 = (double) endNode.getX() - x;
-        double d2 = (double) endNode.getY() - y;
-        double d3 = (double) endNode.getZ() - z;
+        double d1 = endNode.getX() - x;
+        double d2 = endNode.getY() - y;
+        double d3 = endNode.getZ() - z;
 
-        this.hCost = Math.sqrt((d1 * d1) + (d2 * d2) + (d3 * d3));
+        this.hCost = Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
+    }
+
+    private List<BlockPos> getSimilar(List<BlockPos> adjPos, List<BlockPos> adjParent) {
+        Set<BlockPos> adjParentSet = new HashSet<>(adjParent);
+        return adjPos.stream()
+                .filter(adjParentSet::contains)
+                .collect(Collectors.toList());
     }
 
     public double getHCost() {

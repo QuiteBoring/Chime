@@ -31,9 +31,9 @@ public class WalkExecutor {
     private boolean isActive;
     private List<PathElm> path;
     private WalkTarget currentTarget;
-    private PathConfig oldConfig;
+    private PathConfig.Walk oldConfig;
 
-    public void walk(PathConfig config) {
+    public void walk(PathConfig.Walk config) {
         List<Node> nodes = PathFinder.findPath(config);
         path = ProcessorManager.process(nodes);
 
@@ -64,22 +64,18 @@ public class WalkExecutor {
             currentTarget = null;
             KeyBindUtil.setMovement(false, false, false, false);
             RotationHandler.getInstance().reset();
+            isActive = false;
 
             if (!oldConfig.end.equals(BlockUtil.getPlayerBlockPos())) {
                 oldConfig.start = BlockUtil.getPlayerBlockPos();
                 if (oldConfig.end.equals(oldConfig.prevEnd)) {
                     LogUtil.sendError("Unable to find a viable path.");
-                    isActive = false;
                     return;
                 }
 
                 oldConfig.prevEnd = oldConfig.end;
                 walk(oldConfig);
-            } else {
-                isActive = false;
             }
-
-            return;
         }
 
         if (currentTarget == null) currentTarget = getCurrentTarget(path.get(0));
@@ -123,7 +119,7 @@ public class WalkExecutor {
             angles = new Rotation(Chime.MC.thePlayer.rotationYaw, 10F);
         }
 
-        if (timer.hasElasped(200, true) && Chime.MC.thePlayer.onGround) RotationHandler.getInstance().easeTo(angles.yaw, currentTarget instanceof JumpTarget ? -10 : 10, 500);
+        if (timer.hasElasped(200, true) && Chime.MC.thePlayer.onGround && oldConfig.rotate) RotationHandler.getInstance().easeTo(angles.yaw, currentTarget instanceof JumpTarget ? -10 : 10, 500);
         pressKeys(angles.yaw);
     }
 

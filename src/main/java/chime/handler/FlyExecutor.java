@@ -24,6 +24,7 @@ public class FlyExecutor {
 
     private boolean active = false;
     private int index = 0;
+    private PathConfig.Fly oldConfig;
     private List<BlockPos> path = new ArrayList<>();
     private List<Vec3> smoothedPath = new ArrayList<>();
     private final FlyNodeProcessor flyNodeProcessor = new FlyNodeProcessor();
@@ -35,7 +36,7 @@ public class FlyExecutor {
             new Vec3(0.95, 0, 0.95)
     };
 
-    public void fly(PathConfig config) {
+    public void fly(PathConfig.Fly config) {
         float maxDistance = (float) Math.min(Chime.MC.thePlayer.getPositionVector().distanceTo(BlockUtil.toVec(config.end)) + 5, 1500);
         PathEntity route = ((PathFinderAccessor) pathFinder).createPath(
             Chime.MC.theWorld,
@@ -65,6 +66,7 @@ public class FlyExecutor {
 
         if (config.render) PathRender.getInstance().setFlyPath(BlockUtil.toVecList(path));
         index = 0;
+        oldConfig = config;
         active = true;
     }
 
@@ -125,7 +127,7 @@ public class FlyExecutor {
         }
 
         if (playerPos.getX() != target.getX() || playerPos.getZ() != target.getZ()) {
-            RotationHandler.getInstance().easeTo(angles.yaw, 10F, 500);
+            if (oldConfig.rotate) RotationHandler.getInstance().easeTo(angles.yaw, 10F, 500);
         }
 
         pressKeys(angles.yaw);

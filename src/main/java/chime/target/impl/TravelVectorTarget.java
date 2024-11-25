@@ -19,10 +19,10 @@ public class TravelVectorTarget extends WalkTarget {
     @Override
     public boolean tick(Vec3 predictedMotionOnStop, Vec3 playerPos) {
         if (!baseReached) {
-            if (playerPos.distanceTo(BlockUtil.toVec(node.getFrom().getBlockPos()))
-                    < playerPos.distanceTo(BlockUtil.toVec(node.getTo().getBlockPos()))) {
+            if (node.playerOn(playerPos)) {
                 baseReached = true;
-            } else if (node.playerOn(playerPos)) {
+            } else if (playerPos.distanceTo(BlockUtil.toVec(node.getFrom().getBlockPos()))
+                    < playerPos.distanceTo(BlockUtil.toVec(node.getTo().getBlockPos()))) {
                 baseReached = true;
             }
         }

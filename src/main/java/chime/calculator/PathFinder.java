@@ -7,7 +7,7 @@ import java.util.*;
 
 public class PathFinder {
 
-    public static List<Node> findPath(PathConfig config) {
+    public static List<Node> findPath(PathConfig.Walk config) {
         PriorityQueue<Node> open = new PriorityQueue<>(Comparator.comparingDouble(Node::getTotalCost));
         Set<Node> closed = new HashSet<>();
 

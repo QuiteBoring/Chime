@@ -5,38 +5,47 @@ import net.minecraft.util.BlockPos;
 
 public class PathConfig {
 
-    public BlockPos start, end, prevEnd;
-    public boolean longDistance, render, rotate;
-    public long timeout;
-    public Integer iterations;
+    public static class Fly {
 
-    public PathConfig(
-        BlockPos end,
-        boolean render,
-        boolean rotate,
-        long timeout
-    ) {
-        this.start = BlockUtil.getPlayerBlockPos();
-        this.end = end;
-        this.longDistance = false;
-        this.render = render;
-        this.rotate = rotate;
-        this.timeout = timeout;
+        public BlockPos start, end;
+        public boolean longDistance, render, rotate;
+        public long timeout;
+
+        public Fly(
+                BlockPos end,
+                boolean render,
+                boolean rotate,
+                long timeout
+        ) {
+            this.start = BlockUtil.getPlayerBlockPos();
+            this.end = end;
+            this.longDistance = false;
+            this.render = render;
+            this.rotate = rotate;
+            this.timeout = timeout;
+        }
     }
 
-    public PathConfig(
+    public static class Walk {
+
+        public BlockPos start, end, prevEnd;
+        public boolean longDistance, render, rotate;
+        public int iterations;
+
+        public Walk(
             BlockPos end,
             boolean longDistance,
             boolean render,
             boolean rotate,
             int iterations
-    ) {
-        this.start = BlockUtil.getPlayerBlockPos();
-        this.end = end;
-        this.longDistance = longDistance;
-        this.render = render;
-        this.rotate = rotate;
-        this.iterations = iterations;
+        ){
+            this.start = BlockUtil.getPlayerBlockPos();
+            this.end = end;
+            this.longDistance = longDistance;
+            this.render = render;
+            this.rotate = rotate;
+            this.iterations = iterations;
+        }
     }
 
 }
