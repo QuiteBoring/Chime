@@ -146,8 +146,35 @@ public class BlockUtil {
     }
 
     public static boolean isSpaceAvailable(BlockPos blockPos) {
-        return isFree(blockPos.add(0, 1, 0), Chime.MC.theWorld) 
-                || isFree(blockPos.add(0, 2, 0), Chime.MC.theWorld);
+        Block blockAtPos = Chime.MC.theWorld.getBlockState(blockPos).getBlock();
+        AxisAlignedBB boundingBoxAtPos = blockAtPos.getCollisionBoundingBox(world, blockPos, world.getBlockState(blockPos));
+    
+        double baseHeight = blockPos.getY(); 
+        if (boundingBoxAtPos != null) {
+            baseHeight = boundingBoxAtPos.maxY; 
+        }
+    
+        BlockPos blockPosTwoAbove = blockPos.up(2);
+        Block blockTwoAbove = Chime.MC.theWorld.getBlockState(blockPosTwoAbove).getBlock();
+        AxisAlignedBB boundingBoxTwoAbove = blockTwoAbove.getCollisionBoundingBox(Chime.MC.theWorld, blockPosTwoAbove, world.getBlockState(blockPosTwoAbove));
+    
+        double minYTwoAbove = blockPosTwoAbove.getY();
+        if (boundingBoxTwoAbove != null) {
+            minYTwoAbove = boundingBoxTwoAbove.minY; 
+        }
+    
+        double availableHeight = minYTwoAbove - baseHeight;
+        if (availableHeight < 1.8) {
+            return false;
+        }
+    
+        Block blockBelow = Chime.MC.theWorld.getBlockState(blockPos.down()).getBlock();
+        AxisAlignedBB boundingBoxBelow = blockBelow.getCollisionBoundingBox(Chime.MC.theWorld, blockPos.down(), world.getBlockState(blockPos.down()));
+        if (boundingBoxBelow == null) {
+            return false; 
+        }
+    
+        return true; 
     }
 
 }
