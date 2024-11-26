@@ -108,11 +108,9 @@ public class WalkExecutor {
             angles = new Rotation(Chime.MC.thePlayer.rotationYaw, 10F);
         }
 
-        if (timer.hasElasped(200, true) && Chime.MC.thePlayer.onGround && oldConfig.rotate) RotationHandler.getInstance().easeTo(angles.yaw, currentTarget instanceof JumpTarget ? -10 : 10, 500);
+        if (timer.hasElasped(200, true) && Chime.MC.thePlayer.onGround && oldConfig.rotate) RotationHandler.getInstance().easeTo(angles.yaw, currentTarget instanceof JumpTarget ? -10 : 10, 1000);
         pressKeys(angles.yaw);
     }
-
-
     
     private void pressKeys(double targetYaw) {
         double difference = targetYaw - Chime.MC.thePlayer.rotationYaw;
