@@ -35,7 +35,7 @@ public class PathFinder {
             i++;
         }
 
-        return config.longDistance ? getPath(bestNode) : new ArrayList<>();
+        return config.longDistance && !config.start.equals(config.end) ? getPath(bestNode) : new ArrayList<>();
     }
 
     private static void populateNeighbours(
