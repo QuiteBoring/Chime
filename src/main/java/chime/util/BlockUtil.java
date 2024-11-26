@@ -150,7 +150,7 @@ public class BlockUtil {
         Block block2 = Chime.MC.theWorld.getBlockState(blockPos.up(2)).getBlock();
     
         return block1.isPassable(Chime.MC.theWorld, blockPos.up(1))
-                && block2.isPassable(Chime.MC.theWorld, blockPos.up(2))
+                && block2.isPassable(Chime.MC.theWorld, blockPos.up(2));
     }
 
 }
