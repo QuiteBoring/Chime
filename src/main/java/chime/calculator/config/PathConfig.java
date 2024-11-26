@@ -28,7 +28,7 @@ public class PathConfig {
 
     public static class Walk {
 
-        public BlockPos start, end, prevEnd;
+        public BlockPos start, end;
         public boolean longDistance, render, rotate;
         public int iterations;
 
