@@ -77,13 +77,13 @@ public class WalkExecutor {
 
                 walk(oldConfig);
             }
+
+            return;
         }
 
         if (currentTarget == null) currentTarget = getCurrentTarget(path.get(0));
         WalkTarget playerOnTarget;
         if (!((playerOnTarget = onTarget()) == null)) currentTarget = playerOnTarget;
-
-
 
         while (tick(currentTarget)) {
             if (!path.isEmpty()) path.remove(0);
@@ -91,18 +91,18 @@ public class WalkExecutor {
                 currentTarget = null;
                 KeyBindUtil.setMovement(false, false, false, false);
                 RotationHandler.getInstance().reset();
-
-                if (!oldConfig.end.equals(BlockUtil.getPlayerBlockPos())) {
-                    oldConfig.start = BlockUtil.getPlayerBlockPos();
-                    if (oldConfig.end.equals(oldConfig.prevEnd)) {
+                isActive = false;
+    
+                BlockPos playerPos = BlockUtil.getPlayerBlockPos();
+                if (!oldConfig.end.equals(playerPos) && oldConfig.longDistance) {
+                    oldConfig.start = playerPos;
+                    
+                    if (playerPos.equals(oldConfig.start)) {
                         LogUtil.sendError("Unable to find a viable path.");
                         return;
                     }
-
-                    oldConfig.prevEnd = oldConfig.end;
+    
                     walk(oldConfig);
-                } else {
-                    isActive = false;
                 }
 
                 return;
