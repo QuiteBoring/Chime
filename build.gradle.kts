@@ -74,7 +74,6 @@ dependencies {
         isTransitive = false
     }
 
-		implementation("it.unimi.dsi:fastutil:8.5.6")
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.2.1")
 }
 
@@ -110,8 +109,8 @@ val remapJar by tasks.named<net.fabricmc.loom.task.RemapJarTask>("remapJar") {
 }
 
 tasks.jar {
-    archiveClassifier.set("without-deps")
-    destinationDirectory.set(layout.buildDirectory.dir("intermediates"))
+    archiveClassifier.set("dev")
+    destinationDirectory.set(layout.buildDirectory.dir("libs"))
 }
 
 tasks.shadowJar {
