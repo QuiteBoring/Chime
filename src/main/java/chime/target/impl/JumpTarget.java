@@ -51,7 +51,7 @@ public class JumpTarget extends WalkTarget {
 
     private static final Timer jumpCooldown = new Timer();
     public static boolean shouldJump() {
-        return Math.abs(Chime.MC.thePlayer.motionX) + Math.abs(Chime.MC.thePlayer.motionZ) < 1 && jumpCooldown.hasElasped(250, true) && BlockUtil.isColliding();
+        return Math.abs(Chime.MC.thePlayer.motionX) + Math.abs(Chime.MC.thePlayer.motionZ) < 1 && jumpCooldown.hasElasped(100, true) && BlockUtil.isColliding();
     }
 
     public BlockPos getNodeBlockPos() {
