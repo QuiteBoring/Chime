@@ -147,7 +147,7 @@ public class BlockUtil {
 
     public static boolean isSpaceAvailable(BlockPos blockPos) {
         Block blockAtPos = Chime.MC.theWorld.getBlockState(blockPos).getBlock();
-        AxisAlignedBB boundingBoxAtPos = blockAtPos.getCollisionBoundingBox(world, blockPos, world.getBlockState(blockPos));
+        AxisAlignedBB boundingBoxAtPos = blockAtPos.getCollisionBoundingBox(Chime.MC.theWorld, blockPos, Chime.MC.theWorld.getBlockState(blockPos));
     
         double baseHeight = blockPos.getY(); 
         if (boundingBoxAtPos != null) {
@@ -156,7 +156,7 @@ public class BlockUtil {
     
         BlockPos blockPosTwoAbove = blockPos.up(2);
         Block blockTwoAbove = Chime.MC.theWorld.getBlockState(blockPosTwoAbove).getBlock();
-        AxisAlignedBB boundingBoxTwoAbove = blockTwoAbove.getCollisionBoundingBox(Chime.MC.theWorld, blockPosTwoAbove, world.getBlockState(blockPosTwoAbove));
+        AxisAlignedBB boundingBoxTwoAbove = blockTwoAbove.getCollisionBoundingBox(Chime.MC.theWorld, blockPosTwoAbove, Chime.MC.theWorld.getBlockState(blockPosTwoAbove));
     
         double minYTwoAbove = blockPosTwoAbove.getY();
         if (boundingBoxTwoAbove != null) {
@@ -169,7 +169,7 @@ public class BlockUtil {
         }
     
         Block blockBelow = Chime.MC.theWorld.getBlockState(blockPos.down()).getBlock();
-        AxisAlignedBB boundingBoxBelow = blockBelow.getCollisionBoundingBox(Chime.MC.theWorld, blockPos.down(), world.getBlockState(blockPos.down()));
+        AxisAlignedBB boundingBoxBelow = blockBelow.getCollisionBoundingBox(Chime.MC.theWorld, blockPos.down(), Chime.MC.theWorld.getBlockState(blockPos.down()));
         if (boundingBoxBelow == null) {
             return false; 
         }
