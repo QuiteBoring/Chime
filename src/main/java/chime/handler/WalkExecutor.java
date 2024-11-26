@@ -66,14 +66,15 @@ public class WalkExecutor {
             RotationHandler.getInstance().reset();
             isActive = false;
 
-            if (!oldConfig.end.equals(BlockUtil.getPlayerBlockPos())) {
-                oldConfig.start = BlockUtil.getPlayerBlockPos();
-                if (oldConfig.end.equals(oldConfig.prevEnd)) {
+            BlockPos playerPos = BlockUtil.getPlayerBlockPos();
+            if (!oldConfig.end.equals(playerPos) && oldConfig.longDistance) {
+                oldConfig.start = playerPos;
+                
+                if (playerPos.equals(oldConfig.start)) {
                     LogUtil.sendError("Unable to find a viable path.");
                     return;
                 }
 
-                oldConfig.prevEnd = oldConfig.end;
                 walk(oldConfig);
             }
         }
