@@ -69,12 +69,6 @@ public class WalkExecutor {
             BlockPos playerPos = BlockUtil.getPlayerBlockPos();
             if (!oldConfig.end.equals(playerPos) && oldConfig.longDistance) {
                 oldConfig.start = playerPos;
-                
-                if (playerPos.equals(oldConfig.start)) {
-                    LogUtil.sendError("Unable to find a viable path.");
-                    return;
-                }
-
                 walk(oldConfig);
             }
 
@@ -96,12 +90,6 @@ public class WalkExecutor {
                 BlockPos playerPos = BlockUtil.getPlayerBlockPos();
                 if (!oldConfig.end.equals(playerPos) && oldConfig.longDistance) {
                     oldConfig.start = playerPos;
-                    
-                    if (playerPos.equals(oldConfig.start)) {
-                        LogUtil.sendError("Unable to find a viable path.");
-                        return;
-                    }
-    
                     walk(oldConfig);
                 }
 
